@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
-using RouletteApiCleanCode.Contexts;
 using RouletteApiCleanCode.Models;
+using RouletteApiCleanCode.Contexts;
 
 namespace RouletteApiCleanCode.Controllers
 {
@@ -42,10 +42,10 @@ namespace RouletteApiCleanCode.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Disculpa, tenemos algunos inconvenientes. Intentelo más tarde. {ex.Message} {ex.StackTrace}");
+                return StatusCode(500, $"The server encountered an internal error ad was unable to complete your request. {ex.Message} {ex.StackTrace}");
             }
         }
-
+   
         [HttpDelete("{id}")]
         public ActionResult DeleteRoulette(int id)
         {
@@ -56,13 +56,13 @@ namespace RouletteApiCleanCode.Controllers
                 {
                     context.Roulette.Remove(roulette);
                     context.SaveChanges();
-                    return Ok($"Se ha eliminado correctamente la ruleta con identificador: {roulette.RouletteId}.");
+                    return Ok($"The Roulette {roulette.RouletteId} has been deleted.");
                 }
-                return BadRequest($"La solicitud es incorrecta y no ha podido ser procesada. Intentelo de nuevo.");
+                return BadRequest();
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Disculpa, tenemos algunos inconvenientes. Intentalo más tarde. {ex.Message} {ex.StackTrace}");
+                return StatusCode(500, $"The server encountered an internal error ad was unable to complete your request. {ex.Message} {ex.StackTrace}");
             }
         }
     }
