@@ -34,28 +34,28 @@ namespace RouletteApiCleanCode.Controllers
             {
                 if (!this.Request.Headers.Keys.Contains("UserId"))
                 {
-                    return StatusCode(403, "La apuesta no tiene un id.");
+                    return StatusCode(403, "The bet doesn't have an user id in headers.");
                 }
 
                 if (isNumber && bet.BetValue <= 10000)
                 {
                     context.RouletteBet.Add(bet);
                     context.SaveChanges();
-                    return Ok($"La apuesta se ha creado.");
+                    return Ok($"The bet has been created.");
                 }
 
                 if (isColor && bet.BetValue <= 10000)
                 {
                     context.RouletteBet.Add(bet);
                     context.SaveChanges();
-                    return Ok($"La apuesta se ha creado.");
+                    return Ok($"The bet has been created.");
                 }
 
                 return BadRequest();
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Disculpa, tenemos algunos inconvenientes. Intentelo más tarde. {ex.Message} {ex.StackTrace}");
+                return StatusCode(500, $"The server encountered an internal error ad was unable to complete your request. {ex.Message} {ex.StackTrace}");
             }
         }
 

@@ -25,7 +25,6 @@ namespace RouletteApiCleanCode.Controllers
             return context.RouletteMatch.ToList();
         }
 
-
         [HttpPost]
         public ActionResult StartGame([FromBody]RouletteMatch match)
         {
@@ -35,14 +34,14 @@ namespace RouletteApiCleanCode.Controllers
                 {
                     context.RouletteMatch.Add(match);
                     context.SaveChanges();
-                    return Ok($"La partida ha empezado");
+                    return Ok($"The game has started.");
                 }
 
                 return BadRequest();
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Disculpa, tenemos algunos inconvenientes. Intentelo más tarde. {ex.Message} {ex.StackTrace}");
+                return StatusCode(500, $"The server encountered an internal error ad was unable to complete your request. {ex.Message} {ex.StackTrace}");
             }
         }
 
@@ -66,7 +65,7 @@ namespace RouletteApiCleanCode.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Disculpa, tenemos algunos inconvenientes. Intentelo más tarde. {ex.Message} {ex.InnerException}");
+                return StatusCode(500, $"The server encountered an internal error ad was unable to complete your request. {ex.Message} {ex.StackTrace}");
             }
         }
 

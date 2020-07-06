@@ -38,11 +38,11 @@ namespace RouletteApiCleanCode.Controllers
             {
                 context.RouletteUser.Add(user);
                 context.SaveChanges();
-                return Ok($"El usuario {user.UserName} con identificador: {user.CodUser} se ha creado.");
+                return Ok($"The user {user.UserName} with ID: {user.CodUser} has been created.");
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Disculpa, tenemos algunos inconvenientes. Intentelo más tarde. {ex.Message} {ex.StackTrace}");
+                return StatusCode(500, $"The server encountered an internal error ad was unable to complete your request. {ex.Message} {ex.StackTrace}");
             }
         }
     }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+
 using RouletteApiCleanCode.Models;
 
 namespace RouletteApiCleanCode.Contexts

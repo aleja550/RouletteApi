@@ -42,10 +42,68 @@ namespace RouletteApiCleanCode.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"The server encountered an internal error ad was unable to complete your request. {ex.Message} {ex.StackTrace}");
+                return StatusCode(500, $"The server encountered an internal error was unable to complete your request. {ex.Message} {ex.StackTrace}");
             }
         }
-   
+
+        [HttpPut]
+        [Route("SetStateRoulette/{id}")]
+        public ActionResult OpeningOrClosingRoulette(int id, [FromBody]Roulette roulette)
+        {
+            Roulette getRouletteInfo = context.Roulette.FirstOrDefault(r => r.RouletteId == id);
+            try
+            {
+                if (getRouletteInfo != null)
+                {
+                    if (getRouletteInfo.RouletteState == false && roulette.RouletteState == true)
+                    {
+                        OpeningRoulette(roulette);
+                        return Ok($"La ruleta ha sido abierta exitosamente.");
+                    }
+
+                    if (getRouletteInfo.RouletteState == true && roulette.RouletteState == false)
+                    {
+                        ClosingRoulette(roulette);
+
+                        Roulette getRoulette = context.Roulette.FirstOrDefault(r => r.RouletteId == id);
+                        List<RouletteMatch> allMatches = context.RouletteMatch
+                                                         .Where(r => r.FK_Roulette == getRoulette.RouletteId
+                                                                && r.FHEndGame > getRoulette.FHOpening && r.FHEndGame < getRoulette.FHClosing)
+                                                         .ToList();
+                        int? totalValueOnBets = allMatches.Sum(v => v.TotalValueBets);
+                        int? totalBets = allMatches.Sum(b => b.TotalBets);
+                        return Ok($"La ruleta ha sido cerrada exitosamente. Total apuestas realizadas: {totalBets}. " +
+                                  $"Total partidas jugadas: {allMatches.Count}. Total dinero jugado en las apuestas: {totalValueOnBets}");
+                    }
+
+                    return StatusCode(304, $"La ruleta no tuvo ningún cambio.");
+                }
+
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"The server encountered an internal error was unable to complete your request. {ex.Message} {ex.StackTrace}");
+            }
+        }
+
+        public void OpeningRoulette(Roulette roulette)
+        {
+            string formattedDate = string.Format("{0:yyyy-MM-ddTHH:mm:ssZ}", DateTime.Now);
+            context.Entry(roulette).Property(r => r.RouletteState).IsModified = true;
+            context.Roulette.FirstOrDefault(r => r.RouletteId == roulette.RouletteId).FHOpening = Convert.ToDateTime(formattedDate);
+            context.Roulette.FirstOrDefault(r => r.RouletteId == roulette.RouletteId).FHClosing = null;
+            context.SaveChanges();
+        }
+
+        public void ClosingRoulette(Roulette roulette)
+        {
+            string formattedDate = string.Format("{0:yyyy-MM-ddTHH:mm:ssZ}", DateTime.Now);
+            context.Entry(roulette).Property(r => r.RouletteState).IsModified = true;
+            context.Roulette.FirstOrDefault(r => r.RouletteId == roulette.RouletteId).FHClosing = Convert.ToDateTime(formattedDate);
+            context.SaveChanges();
+        }
+
         [HttpDelete("{id}")]
         public ActionResult DeleteRoulette(int id)
         {
